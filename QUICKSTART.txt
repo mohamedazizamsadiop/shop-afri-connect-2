@@ -1,0 +1,339 @@
+# QUICKSTART - MarketHub
+
+Démarrage rapide du projet MarketHub en 5 minutes.
+
+## 🚀 Option 1 : Développement Local
+
+Recommandé pour développer sur le code.
+
+### Terminal 1 - Frontend
+
+```bash
+npm install --legacy-peer-deps
+npm start
+```
+
+Accès: http://localhost:8080
+
+### Terminal 2 - Backend
+
+```bash
+cd server
+npm install --legacy-peer-deps
+npm run dev
+```
+
+Accès: http://localhost:4000
+
+### Terminal 3 - Database (optionnel - local MongoDB)
+
+```bash
+mongod
+```
+
+---
+
+## 🐳 Option 2 : Docker Compose
+
+Recommandé pour la cohérence environnement local/production.
+
+### Démarrer tout d'un coup
+
+```bash
+docker-compose up
+```
+
+Services disponibles:
+- Frontend: http://localhost:8080
+- Backend: http://localhost:4000
+- MongoDB: localhost:27017
+
+Pour arrêter:
+```bash
+docker-compose down
+```
+
+---
+
+## 🧪 Option 3 : Tests
+
+Exécuter la suite de tests complète.
+
+### Backend tests
+
+```bash
+cd server
+npm test
+```
+
+Ou avec MongoDB externe:
+```bash
+TEST_MONGODB_URI=mongodb://localhost:27017/test npm test
+```
+
+### Tester un endpoint spécifique
+
+```bash
+curl http://localhost:4000/api/products
+```
+
+---
+
+## ⚙️ Configuration Initiale
+
+### 1. Créer le fichier .env
+
+```bash
+cp server/.env.example server/.env
+```
+
+### 2. Éditer server/.env
+
+Remplacer les valeurs:
+```
+MONGODB_URI=mongodb://localhost:27017/markethub
+PORT=4000
+JWT_SECRET=<générer avec: openssl rand -base64 32>
+JWT_ACCESS_EXPIRES=15m
+JWT_REFRESH_EXPIRES=7d
+DEFAULT_COMMISSION_PERCENT=15
+STRIPE_SECRET=sk_test_... (obtenir depuis Stripe)
+STRIPE_WEBHOOK_SECRET=whsec_... (obtenir depuis Stripe)
+```
+
+Optionnel (pour emails):
+```
+MAIL_SERVICE=gmail
+MAIL_USER=votre-email@gmail.com
+MAIL_PASSWORD=app-password (générer depuis Google Account)
+```
+
+---
+
+## 📊 Accès aux Dashboards
+
+### Account Page (Profil Utilisateur)
+```
+http://localhost:8080/account
+```
+
+### Dashboard Vendeur
+```
+http://localhost:8080/seller/dashboard
+```
+
+Affichage:
+- Revenus mensuels (chart)
+- Commandes (chart)
+- Répartition par catégorie (pie chart)
+- Commandes récentes (table)
+- Statistiques
+
+### Dashboard Admin
+```
+http://localhost:8080/admin/dashboard
+```
+
+Affichage:
+- Statistiques globales plateforme
+- Validation vendeurs
+- Demandes de retrait en attente
+- Tendances revenus/commissions
+
+---
+
+## 🧑‍💻 Comptes de Test
+
+### Créer les comptes
+
+**Client:**
+- Email: client@test.com
+- Password: password123
+- Role: client
+
+**Vendeur:**
+- Email: seller@test.com
+- Password: password123
+- Role: seller
+
+**Admin:**
+- Email: admin@test.com
+- Password: admin123
+- Role: admin
+
+### Créer via API
+
+```bash
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name":"Test User",
+    "email":"test@example.com",
+    "password":"password123",
+    "role":"client"
+  }'
+```
+
+---
+
+## 📚 Documentation
+
+Pour plus d'informations, consulter:
+
+- **README.md** - Vue d'ensemble projet et architecture
+- **IMPLEMENTATION_SUMMARY.md** - Ce qui a été implémenté
+- **server/API_DOCS.md** - Documentation API complète avec exemples
+- **DEPLOYMENT.md** - Guide de déploiement production
+
+---
+
+## ⚠️ Troubleshooting
+
+### "Module not found"
+```bash
+npm install --legacy-peer-deps
+cd server && npm install --legacy-peer-deps
+```
+
+### "Cannot connect to MongoDB"
+```bash
+# Si MongoDB local:
+mongod
+
+# Ou utiliser mongoDB externe:
+# Éditer MONGODB_URI dans .env avec MongoDB Atlas URL
+```
+
+### "Port already in use"
+```bash
+# Trouver le processus:
+lsof -i :4000  # pour backend
+lsof -i :8080  # pour frontend
+
+# Arrêter:
+kill -9 <PID>
+
+# Ou changer le PORT dans .env
+```
+
+### "Tests fail with MongoDB error"
+```bash
+# Utiliser MongoDB externe pour les tests:
+TEST_MONGODB_URI=mongodb://localhost:27017/test npm test
+```
+
+### Frontend build errors
+```bash
+rm -rf node_modules dist
+npm install --legacy-peer-deps
+npm run build
+```
+
+---
+
+## 🔧 Commandes Principales
+
+### Frontend
+```bash
+npm start           # Dev server sur 8080
+npm run build       # Production build
+npm run preview     # Preview du build
+npm run lint        # Lint code (si configuré)
+```
+
+### Backend
+```bash
+npm run dev         # Dev server sur 4000
+npm start           # Production server
+npm test            # Run tests
+npm run lint        # Lint code (si configuré)
+```
+
+### Docker
+```bash
+docker-compose up                  # Démarrer
+docker-compose down                # Arrêter
+docker-compose logs backend        # Voir logs
+docker-compose exec backend sh     # Shell dans container
+docker-compose ps                  # Statut
+```
+
+---
+
+## 🔄 Workflow Développement
+
+1. **Démarrer l'application**
+   ```bash
+   docker-compose up  # Ou npm start/npm run dev séparément
+   ```
+
+2. **Consulter la documentation**
+   - API: server/API_DOCS.md
+   - Architecture: README.md
+   - Implémentation: IMPLEMENTATION_SUMMARY.md
+
+3. **Tester les endpoints**
+   - Via Postman/Insomnia
+   - Via curl
+   - Via tests Jest
+
+4. **Modifier le code**
+   - Frontend: src/routes, src/components
+   - Backend: server/src/routes, server/src/models
+
+5. **Voir les changements**
+   - Frontend: Recharge automatique (Vite)
+   - Backend: Relance avec npm run dev (nodemon)
+
+6. **Committer les changements**
+   ```bash
+   git add .
+   git commit -m "feat: description"
+   git push
+   ```
+
+---
+
+## 🚀 Déploiement
+
+Pour déployer en production, voir **DEPLOYMENT.md**.
+
+Résumé:
+- Frontend → Vercel
+- Backend → Render
+- Database → MongoDB Atlas
+- Images → Cloudinary (optional)
+
+---
+
+## ✅ Vérification de Démarrage
+
+Après avoir lancé l'application, vérifier:
+
+```bash
+# Frontend running?
+curl http://localhost:8080
+
+# Backend running?
+curl http://localhost:4000
+
+# API accessible?
+curl http://localhost:4000/api/products
+
+# Auth working?
+curl -X POST http://localhost:4000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"client@test.com","password":"password123"}'
+```
+
+✅ Tous les verts? Prêt à développer! 🎉
+
+---
+
+## 📞 Support
+
+Pour toute question:
+1. Consulter la documentation (README.md, IMPLEMENTATION_SUMMARY.md)
+2. Vérifier les logs: `docker-compose logs`
+3. Lire API_DOCS.md pour les endpoints
+4. Vérifier .env configuration
