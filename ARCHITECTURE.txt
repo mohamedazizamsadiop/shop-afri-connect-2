@@ -1,0 +1,348 @@
+ARCHITECTURE MARKETHU B - VUE COMPLÈTE
+════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              COUCHE PRÉSENTATION                             │
+│                              (React + Vite)                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│  │  Accueil     │  │  Produits    │  │  Panier &    │  │  Recherche   │    │
+│  │  Catégories │  │  Détails     │  │  Commandes   │  │  Filtres     │    │
+│  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘    │
+│                                                                               │
+│  ┌──────────────┐  ┌──────────────────────┐  ┌──────────────┐               │
+│  │  Profil      │  │  Dashboard           │  │  Paiement    │               │
+│  │  Utilisateur │  │  (Vendeur/Admin)     │  │  Stripe      │               │
+│  │  Account     │  │  • Charts            │  │  Integration │               │
+│  │              │  │  • Statistiques      │  │              │               │
+│  │              │  │  • Gestion           │  │              │               │
+│  └──────────────┘  └──────────────────────┘  └──────────────┘               │
+│                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │                        Context & State                              │    │
+│  │  • AuthContext (JWT tokens, user role)                             │    │
+│  │  • CartContext (items, totals)                                     │    │
+│  │  • Global notifications                                            │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │                   Tailwind CSS + Recharts                           │    │
+│  │  • oklch color system (orange #FF6B35)                             │    │
+│  │  • Charts: Line, Bar, Pie                                          │    │
+│  │  • Components: 30+ UI réutilisables                                │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ▼
+                        ┌───────────────────────┐
+                        │   HTTP/REST API       │
+                        │   (JWT Authorization) │
+                        └───────────────────────┘
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        COUCHE MÉTIER - BACKEND                               │
+│                          (Node.js + Express)                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                    ROUTES API (28 endpoints)                        │   │
+│  ├──────────────────────────────────────────────────────────────────────┤   │
+│  │  Auth Routes:           /api/auth/*                                  │   │
+│  │  • POST /register       - Créer compte                              │   │
+│  │  • POST /login          - Authentifier                              │   │
+│  │  • POST /refresh        - Renouveler token                          │   │
+│  │  • POST /logout         - Déconnecter                               │   │
+│  │                                                                      │   │
+│  │  Products Routes:       /api/products/*                              │   │
+│  │  • GET /                - Lister produits                            │   │
+│  │  • GET /:id             - Détails produit                            │   │
+│  │  • POST /               - Créer (seller)                             │   │
+│  │  • PUT /:id             - Modifier (seller owner)                    │   │
+│  │  • DELETE /:id          - Supprimer (seller owner)                   │   │
+│  │                                                                      │   │
+│  │  Orders Routes:         /api/orders/*                                │   │
+│  │  • POST /               - Créer commande                             │   │
+│  │  • GET /                - Mes commandes                              │   │
+│  │  • PUT /:id/status      - Statut commande                            │   │
+│  │                                                                      │   │
+│  │  Stripe Routes:         /api/stripe/*                                │   │
+│  │  • POST /create-subscription - Session paiement                      │   │
+│  │  • POST /webhook        - Webhook paiements                          │   │
+│  │                                                                      │   │
+│  │  Wallets Routes:        /api/wallets/*                               │   │
+│  │  • GET /me              - Solde vendeur                              │   │
+│  │  • POST /release        - Libérer fonds (admin)                      │   │
+│  │  • POST /auto-release   - Auto-release (admin/cron)                  │   │
+│  │                                                                      │   │
+│  │  Withdrawals Routes:    /api/withdrawals/*                           │   │
+│  │  • POST /request        - Demander retrait (seller)                  │   │
+│  │  • GET /                - Lister retraits (admin)                    │   │
+│  │  • POST /:id/approve    - Approuver (admin)                          │   │
+│  │  • POST /:id/reject     - Rejeter (admin)                            │   │
+│  │                                                                      │   │
+│  │  Notifications Routes:  /api/notifications/*                         │   │
+│  │  • GET /                - Mes notifications                          │   │
+│  │  • PUT /:id/read        - Marquer lue                                │   │
+│  │  • PUT /read-all        - Marquer toutes lues                        │   │
+│  │  • DELETE /:id          - Supprimer                                  │   │
+│  │                                                                      │   │
+│  │  Admin Routes:          /api/admin/*                                 │   │
+│  │  • POST /validate-seller - Valider vendeur                           │   │
+│  │  • GET /ledger          - Historique financier                       │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │              MIDDLEWARE & AUTHENTIFICATION                           │   │
+│  ├──────────────────────────────────────────────────────────────────────┤   │
+│  │  • JWT Verification (utils/jwt.js)                                  │   │
+│  │    - signAccessToken(userId) → 15m expiry                           │   │
+│  │    - signRefreshToken(userId) → 7d expiry                           │   │
+│  │    - verifyToken(token) → userId                                    │   │
+│  │                                                                      │   │
+│  │  • Role-Based Access Control (middleware/auth.js)                   │   │
+│  │    - requireAuth() → User must be authenticated                      │   │
+│  │    - requireRole(admin/seller/client) → Role check                  │   │
+│  │                                                                      │   │
+│  │  • Password Hashing                                                 │   │
+│  │    - bcryptjs: hashPassword(), comparePassword()                    │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │          SERVICES & UTILITAIRES                                      │   │
+│  ├──────────────────────────────────────────────────────────────────────┤   │
+│  │  Notifications Service (utils/notifications.js)                     │   │
+│  │  • sendEmailNotification(to, subject, html)                         │   │
+│  │  • Email templates: 6 templates prêts                               │   │
+│  │  • Nodemailer integration: Gmail + génériques                       │   │
+│  │  • Dev mode: Logs, Prod mode: Emails réels                          │   │
+│  │                                                                      │   │
+│  │  Stripe Service                                                     │   │
+│  │  • Payment intent creation                                          │   │
+│  │  • Subscription management                                          │   │
+│  │  • Webhook signature verification                                   │   │
+│  │  • Commission splitting (15% default)                               │   │
+│  │                                                                      │   │
+│  │  Wallet Service                                                     │   │
+│  │  • Pending → Available balance transfer                             │   │
+│  │  • Auto-release après N jours                                       │   │
+│  │  • Ledger entry creation                                            │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ▼
+                        ┌───────────────────────┐
+                        │   MongoDB Queries     │
+                        │   (Mongoose Models)   │
+                        └───────────────────────┘
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    COUCHE DONNÉES - MONGODB                                  │
+│                      (8 Collections)                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │     USERS           │  │     SELLERS         │  │     PRODUCTS        │ │
+│  ├─────────────────────┤  ├─────────────────────┤  ├─────────────────────┤ │
+│  │ • _id               │  │ • _id               │  │ • _id               │ │
+│  │ • name              │  │ • userId (FK)       │  │ • sellerId (FK)     │ │
+│  │ • email (unique)    │  │ • shopName          │  │ • name              │ │
+│  │ • password (hash)   │  │ • subscription:     │  │ • description       │ │
+│  │ • role (enum)       │  │   - plan            │  │ • sellerPrice       │ │
+│  │ • refreshTokens[]   │  │   - status          │  │ • commission%       │ │
+│  │ • timestamps        │  │   - billingDate     │  │ • finalPrice        │ │
+│  │                     │  │ • stripeCustomerId  │  │ • stock             │ │
+│  │                     │  │ • stripeSubId       │  │ • SKU               │ │
+│  │                     │  │ • verified (bool)   │  │ • images[]          │ │
+│  │                     │  │ • walletBalance     │  │ • category          │ │
+│  │                     │  │ • timestamps        │  │ • timestamps        │ │
+│  │                     │  │                     │  │                     │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+│                                                                               │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │     ORDERS          │  │     WALLETS         │  │    WITHDRAWALS      │ │
+│  ├─────────────────────┤  ├─────────────────────┤  ├─────────────────────┤ │
+│  │ • _id               │  │ • _id               │  │ • _id               │ │
+│  │ • customerId (FK)   │  │ • sellerId (FK)     │  │ • sellerId (FK)     │ │
+│  │ • products[]:       │  │ • availableBalance  │  │ • amount            │ │
+│  │   - productId       │  │ • pendingBalance    │  │ • status (enum)     │ │
+│  │   - quantity        │  │ • timestamps        │  │ • method            │ │
+│  │   - prices          │  │                     │  │ • timestamps        │ │
+│  │ • totalAmount       │  │ (Escrow system)     │  │                     │ │
+│  │ • status (enum)     │  │                     │  │                     │ │
+│  │ • paymentIntentId   │  │                     │  │                     │ │
+│  │ • deliveredAt       │  │                     │  │                     │ │
+│  │ • released (bool)   │  │                     │  │                     │ │
+│  │ • timestamps        │  │                     │  │                     │ │
+│  │                     │  │                     │  │                     │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+│                                                                               │
+│  ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│  │     LEDGER          │  │    NOTIFICATIONS    │  │                     │ │
+│  ├─────────────────────┤  ├─────────────────────┤  ├─────────────────────┤ │
+│  │ • _id               │  │ • _id               │  │                     │ │
+│  │ • type (enum):      │  │ • userId (FK)       │  │                     │ │
+│  │   - split           │  │ • type (enum)       │  │                     │ │
+│  │   - commission      │  │ • title             │  │                     │ │
+│  │   - release         │  │ • message           │  │ (Audit immuable)    │ │
+│  │   - payout          │  │ • data: {orderId}   │  │                     │ │
+│  │ • orderId (FK)      │  │ • read (bool)       │  │                     │ │
+│  │ • productId (FK)    │  │ • channel (enum)    │  │                     │ │
+│  │ • sellerId (FK)     │  │ • status (enum)     │  │                     │ │
+│  │ • amount            │  │ • error             │  │                     │ │
+│  │ • commission        │  │ • sentAt            │  │                     │ │
+│  │ • platformFee       │  │ • readAt            │  │                     │ │
+│  │ • description       │  │ • timestamps        │  │                     │ │
+│  │ • metadata          │  │                     │  │                     │ │
+│  │ • timestamps        │  │                     │  │                     │ │
+│  │                     │  │                     │  │                     │ │
+│  └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+│                                                                               │
+│  Indexes:                                                                    │
+│  • users: email (unique)                                                    │
+│  • sellers: userId (unique)                                                 │
+│  • products: sellerId, category                                             │
+│  • orders: customerId, status, deliveredAt                                  │
+│  • wallets: sellerId (unique)                                               │
+│  • ledger: sellerId, orderId, type, date                                    │
+│  • notifications: userId, read, createdAt                                   │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+FLUX DE DONNÉES - EXEMPLE COMPLET (Commande → Paiement → Retrait)
+════════════════════════════════════════════════════════════════════════════════
+
+1. CLIENT CRÉE UNE COMMANDE
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ Frontend: POST /api/orders avec items[]                              │
+   │ Backend: Crée Order avec status="created", génère paymentIntentId    │
+   │ Response: {..., paymentIntentId, status: "created"}                  │
+   └──────────────────────────────────────────────────────────────────────┘
+                                    ▼
+2. CLIENT EFFECTUE LE PAIEMENT
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ Frontend: Intégration Stripe (card, Elements)                        │
+   │ Stripe: Traite le paiement                                           │
+   │ Response: payment_intent.succeeded webhook                           │
+   └──────────────────────────────────────────────────────────────────────┘
+                                    ▼
+3. WEBHOOK STRIPE DÉCLENCHE
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ Stripe → Backend: POST /api/stripe/webhook                           │
+   │ • Marque Order.status = "paid"                                       │
+   │ • Crée Ledger entries: split + commission pour chaque vendeur        │
+   │ • Crée/met à jour Wallet.pendingBalance (+=produits montant)         │
+   │ • Crée Notification "Commande confirmée"                             │
+   │ • Envoie email client: "Commande confirmée"                          │
+   │ • Envoie email vendeur: "Nouvelle commande"                          │
+   └──────────────────────────────────────────────────────────────────────┘
+                                    ▼
+4. VENDEUR TRAITE LA COMMANDE
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ Vendeur: PUT /api/orders/:id/status → status="shipped"               │
+   │ • Envoie email client: "Commande expédiée"                            │
+   │ • Crée Notification                                                  │
+   │                                                                      │
+   │ Vendeur: PUT /api/orders/:id/status → status="delivered"             │
+   │ • Envoie email client: "Commande livrée"                              │
+   │ • Enregistre Order.deliveredAt = now()                               │
+   │ • Crée Notification                                                  │
+   └──────────────────────────────────────────────────────────────────────┘
+                                    ▼
+5. AUTO-RELEASE APRÈS 7 JOURS (Cron ou manual call)
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ Admin/Cron: POST /api/wallets/auto-release                           │
+   │ • Trouve Orders: status="delivered" ET deliveredAt <= now()-7d       │
+   │ • Pour chaque vendeur: Wallet.pendingBalance → availableBalance      │
+   │ • Marque Order.released = true                                       │
+   │ • Crée Ledger "release" entries                                      │
+   │ • Crée Notifications pour vendeurs                                   │
+   └──────────────────────────────────────────────────────────────────────┘
+                                    ▼
+6. VENDEUR DEMANDE RETRAIT
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ Vendeur: POST /api/withdrawals/request                               │
+   │ • Vérifie Wallet.availableBalance >= montant                         │
+   │ • Crée Withdrawal avec status="pending"                              │
+   │ • Crée Notification vendeur                                          │
+   └──────────────────────────────────────────────────────────────────────┘
+                                    ▼
+7. ADMIN APPROUVE LE RETRAIT
+   ┌──────────────────────────────────────────────────────────────────────┐
+   │ Admin: POST /api/withdrawals/:id/approve                             │
+   │ • Marque Withdrawal.status = "approved"                              │
+   │ • Déduit Wallet.availableBalance -= montant                          │
+   │ • Crée Ledger "payout" entry                                         │
+   │ • Envoie email vendeur: "Retrait approuvé"                           │
+   │ • Crée Notification                                                  │
+   │ • Déclenche paiement réel (externe)                                  │
+   └──────────────────────────────────────────────────────────────────────┘
+
+FIN: Cycle complet commande → paiement → retrait
+
+
+SÉCURITÉ & PERMISSIONS
+════════════════════════════════════════════════════════════════════════════════
+
+Rôles:
+  • ADMIN     - Gère plateforme, vendeurs, retraits
+  • SELLER    - Vend produits, gère commandes, wallet
+  • CLIENT    - Achète, passe commandes, profil
+
+Contrôles d'accès:
+  ✓ Produits: vendeur peut modifier/supprimer seulement ses produits
+  ✓ Commandes: client voit seulement ses commandes
+  ✓ Wallet: vendeur voit seulement son wallet
+  ✓ Admin: endpoints protégés avec requireRole('admin')
+
+JWT Tokens:
+  ✓ Access token: 15 minutes (pour les opérations)
+  ✓ Refresh token: 7 jours (stocké en DB pour logout)
+  ✓ Révocation: possible via logout (supprimer token DB)
+
+Webhooks Stripe:
+  ✓ Signature verification: STRIPE_WEBHOOK_SECRET
+  ✓ Idempotency: checksum paymentIntentId uniqueness
+  ✓ Replay protection: timestamp validation
+
+
+DÉPLOIEMENT & DEVOPS
+════════════════════════════════════════════════════════════════════════════════
+
+CI/CD Pipeline (GitHub Actions):
+  ✓ Tests automatiques: npm test
+  ✓ Build frontend: npm run build (Vite)
+  ✓ Scan sécurité: Trivy vulnerability scanner
+  ✓ Build Docker: images backend/frontend
+  ✓ Deploy: webhook Render (si main)
+
+Containers:
+  ✓ Backend: Node.js 18 Alpine (40MB base)
+  ✓ Frontend: Multi-stage React (serve)
+  ✓ MongoDB: Official image
+
+Local Development:
+  ✓ docker-compose.yml avec 3 services
+  ✓ Hot reload: Vite (frontend), nodemon (backend)
+  ✓ Volumes for development code sync
+
+Production:
+  ✓ Frontend: Vercel (CDN, SSL, preview)
+  ✓ Backend: Render (auto scaling)
+  ✓ Database: MongoDB Atlas (replicas)
+  ✓ Storage: Cloudinary (images)
+  ✓ Email: Gmail SMTP via Nodemailer
+
+Monitoring:
+  ✓ Logs: Docker logs, GitHub Actions logs
+  ✓ Metrics: Render dashboard, MongoDB Atlas
+  ✓ Uptime: Health checks in Dockerfile
+
+
+════════════════════════════════════════════════════════════════════════════════
+Architecture prête pour production avec scalabilité, sécurité, et monitoring.
+════════════════════════════════════════════════════════════════════════════════
