@@ -23,18 +23,19 @@ router.post("/", requireAuth, async (req, res) => {
       total += p.finalPrice * (it.quantity || 1);
     }
 
-    // create payment intent with Stripe if configured
+    // create order first with status 'created'
+    const order = new Order({ customerId, products, totalAmount: total, status: "created" });
+    await order.save();
+
+    // create payment intent with Stripe if configured and attach orderId metadata
     let paymentIntent = null;
     if (process.env.STRIPE_SECRET) {
       paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(total * 100),
         currency: "eur",
-        metadata: { customerId: customerId.toString() },
+        metadata: { customerId: customerId.toString(), orderId: order._id.toString() },
       });
     }
-
-    const order = new Order({ customerId, products, totalAmount: total, status: paymentIntent ? "created" : "paid" });
-    await order.save();
 
     res.status(201).json({ ok: true, order, payment: paymentIntent ? { client_secret: paymentIntent.client_secret } : null });
   } catch (err) {

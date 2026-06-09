@@ -9,6 +9,10 @@ const SellerSchema = new mongoose.Schema(
       status: { type: String, enum: ["active", "past_due", "cancelled"], default: "active" },
       nextBillingDate: Date,
     },
+    stripeCustomerId: String,
+    stripeSubscriptionId: String,
+    subscriptionStatus: String,
+    verified: { type: Boolean, default: false },
     walletBalance: { type: Number, default: 0 },
   },
   { timestamps: true }

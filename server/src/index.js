@@ -8,6 +8,8 @@ import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/products.js";
 import orderRoutes from "./routes/orders.js";
 import stripeRoutes from "./routes/stripe.js";
+import withdrawalsRoutes from "./routes/withdrawals.js";
+import adminRoutes from "./routes/admin.js";
 
 dotenv.config();
 
@@ -28,6 +30,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/stripe", stripeRoutes);
+app.use("/api/withdrawals", withdrawalsRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => res.json({ ok: true, message: "MarketHub API" }));
 
