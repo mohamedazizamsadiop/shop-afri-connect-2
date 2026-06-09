@@ -10,6 +10,7 @@ import orderRoutes from "./routes/orders.js";
 import stripeRoutes from "./routes/stripe.js";
 import withdrawalsRoutes from "./routes/withdrawals.js";
 import adminRoutes from "./routes/admin.js";
+import walletsRoutes from "./routes/wallets.js";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/stripe", stripeRoutes);
 app.use("/api/withdrawals", withdrawalsRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/wallets", walletsRoutes);
 
 app.get("/", (req, res) => res.json({ ok: true, message: "MarketHub API" }));
 

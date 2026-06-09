@@ -72,6 +72,7 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req, r
           const Order = (await import("../models/Order.js")).default;
           const Product = (await import("../models/Product.js")).default;
           const Wallet = (await import("../models/Wallet.js")).default;
+          const Ledger = (await import("../models/Ledger.js")).default;
           const order = await Order.findById(orderId);
           if (order) {
             order.status = "paid";
@@ -84,18 +85,41 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req, r
               if (!prod) continue;
               const sellerId = prod.sellerId;
               const qty = it.quantity || 1;
-              const sellerAmount = prod.sellerPrice * qty;
+              const sellerUnit = prod.sellerPrice;
+              const sellerAmount = sellerUnit * qty;
               const commissionPercent = prod.commission || parseFloat(process.env.DEFAULT_COMMISSION_PERCENT || "15");
-              const commissionAmount = (prod.sellerPrice * commissionPercent / 100) * qty;
+              const commissionAmount = (sellerUnit * commissionPercent / 100) * qty;
+              const platformFee = commissionAmount;
 
-              // Update or create wallet
+              // Update or create wallet: credit pendingBalance with seller's gross amount
               await Wallet.findOneAndUpdate(
                 { sellerId },
-                { $inc: { pendingBalance: sellerAmount, availableBalance: 0 } },
+                { $inc: { pendingBalance: sellerAmount } },
                 { upsert: true }
               );
 
-              // Here commissionAmount is retained by platform; record could be added to ledger (omitted)
+              // Record ledger entries: seller split and platform commission
+              await Ledger.create({
+                type: "split",
+                orderId: order._id,
+                productId: prod._id,
+                sellerId,
+                amount: sellerAmount,
+                commission: commissionAmount,
+                platformFee,
+                description: `Order ${order._id} split for seller ${sellerId}`,
+                metadata: { paymentIntent: pi.id, qty },
+              });
+
+              await Ledger.create({
+                type: "commission",
+                orderId: order._id,
+                productId: prod._id,
+                sellerId,
+                amount: commissionAmount,
+                description: `Commission retained for order ${order._id}`,
+                metadata: { paymentIntent: pi.id },
+              });
             }
           }
         } catch (err) {
