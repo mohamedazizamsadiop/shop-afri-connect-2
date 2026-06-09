@@ -49,4 +49,19 @@ router.get("/", requireAuth, async (req, res) => {
   res.json({ ok: true, orders });
 });
 
+// update order status (e.g., mark delivered)
+router.put("/:id/status", requireAuth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ ok: false, message: "Not found" });
+    order.status = status;
+    if (status === "delivered") order.deliveredAt = new Date();
+    await order.save();
+    res.json({ ok: true, order });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
 export default router;

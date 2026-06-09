@@ -12,6 +12,8 @@ const OrderSchema = new mongoose.Schema(
     ],
     totalAmount: { type: Number, required: true },
     status: { type: String, enum: ["created", "paid", "preparing", "shipped", "delivered", "completed"], default: "created" },
+    deliveredAt: Date,
+    released: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

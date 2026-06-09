@@ -37,23 +37,46 @@ router.post("/release", requireAuth, requireRole("admin"), async (req, res) => {
   }
 });
 
-// Automated endpoint: release pending funds older than X days (callable by cron)
+// Automated endpoint: release pending funds for orders delivered more than X days ago
 router.post("/auto-release", async (req, res) => {
   try {
     const days = parseInt(req.body.days || process.env.AUTO_RELEASE_DAYS || "7", 10);
-    // Find ledger entries of type 'split' older than X days and not yet released
     const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-    // For simplicity, release all pending balances (real impl would check delivery status)
-    const wallets = await Wallet.find({ pendingBalance: { $gt: 0 } });
+    const Order = (await import("../models/Order.js")).default;
+    const Product = (await import("../models/Product.js")).default;
+
+    // Find orders that are delivered, deliveredAt <= cutoff, and not yet released
+    const orders = await Order.find({ status: "delivered", deliveredAt: { $lte: cutoff }, released: false });
     const results = [];
-    for (const w of wallets) {
-      const amount = w.pendingBalance;
-      w.availableBalance = (w.availableBalance || 0) + amount;
-      w.pendingBalance = 0;
-      await w.save();
-      await Ledger.create({ type: "release", sellerId: w.sellerId, amount, description: `Auto-release ${days}d` });
-      results.push({ sellerId: w.sellerId, amount });
+    for (const order of orders) {
+      // group amounts by seller
+      const bySeller = {};
+      for (const it of order.products) {
+        const prod = await Product.findById(it.productId);
+        if (!prod) continue;
+        const sellerId = prod.sellerId.toString();
+        const qty = it.quantity || 1;
+        const sellerUnit = prod.sellerPrice;
+        const sellerAmount = sellerUnit * qty;
+        bySeller[sellerId] = (bySeller[sellerId] || 0) + sellerAmount;
+      }
+
+      // release funds per seller
+      for (const [sellerId, amount] of Object.entries(bySeller)) {
+        const wallet = await Wallet.findOne({ sellerId });
+        if (!wallet || wallet.pendingBalance <= 0) continue;
+        const releaseAmount = Math.min(amount, wallet.pendingBalance);
+        wallet.availableBalance = (wallet.availableBalance || 0) + releaseAmount;
+        wallet.pendingBalance = Math.max(0, wallet.pendingBalance - releaseAmount);
+        await wallet.save();
+        await Ledger.create({ type: "release", sellerId, amount: releaseAmount, description: `Auto-release for order ${order._id}` });
+        results.push({ orderId: order._id, sellerId, amount: releaseAmount });
+      }
+
+      order.released = true;
+      await order.save();
     }
+
     res.json({ ok: true, released: results.length, details: results });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
