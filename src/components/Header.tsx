@@ -63,10 +63,10 @@ export function Header() {
             </div>
           </form>
 
-          <button className="hidden md:flex items-center gap-1.5 hover:text-primary transition-colors text-sm font-medium">
+          <Link to="/account" className="hidden md:flex items-center gap-1.5 hover:text-primary transition-colors text-sm font-medium">
             <User className="w-5 h-5" />
             <span>Compte</span>
-          </button>
+          </Link>
 
           <Link
             to="/cart"
