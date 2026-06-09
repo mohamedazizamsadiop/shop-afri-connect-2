@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: markethub-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: markethub
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: mongosh --eval "db.adminCommand('ping')" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: markethub-backend
+    ports:
+      - "4000:4000"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/markethub
+      PORT: 4000
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key}
+      JWT_ACCESS_EXPIRES: 15m
+      JWT_REFRESH_EXPIRES: 7d
+      DEFAULT_COMMISSION_PERCENT: 15
+      STRIPE_SECRET: ${STRIPE_SECRET}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      NODE_ENV: development
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      AUTO_RELEASE_DAYS: 7
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./server/src:/app/src
+      - ./server/tests:/app/tests
+    command: npm run dev
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: markethub-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      VITE_API_URL: http://localhost:4000/api
+      NODE_ENV: development
+    depends_on:
+      - backend
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+
+volumes:
+  mongodb_data:
+
+networks:
+  default:
+    name: markethub-network

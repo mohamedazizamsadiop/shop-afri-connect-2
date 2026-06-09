@@ -11,6 +11,7 @@ import stripeRoutes from "./routes/stripe.js";
 import withdrawalsRoutes from "./routes/withdrawals.js";
 import adminRoutes from "./routes/admin.js";
 import walletsRoutes from "./routes/wallets.js";
+import notificationsRoutes from "./routes/notifications.js";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use("/api/stripe", stripeRoutes);
 app.use("/api/withdrawals", withdrawalsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/wallets", walletsRoutes);
+app.use("/api/notifications", notificationsRoutes);
 
 app.get("/", (req, res) => res.json({ ok: true, message: "MarketHub API" }));
 
