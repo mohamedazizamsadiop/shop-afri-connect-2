@@ -5,7 +5,13 @@ import app from "../src/index.js";
 
 let mongod;
 
+jest.setTimeout(30000);
+
 beforeAll(async () => {
+  if (process.env.TEST_MONGODB_URI) {
+    await mongoose.connect(process.env.TEST_MONGODB_URI);
+    return;
+  }
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
   await mongoose.connect(uri);
@@ -13,7 +19,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await mongoose.disconnect();
-  await mongod.stop();
+  if (mongod) await mongod.stop();
 });
 
 test("auto-release moves pending to available for delivered orders", async () => {
