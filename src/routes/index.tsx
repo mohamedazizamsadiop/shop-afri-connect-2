@@ -3,14 +3,55 @@ import { categories, products } from "@/data/products";
 import { ProductCard } from "@/components/ProductCard";
 import heroBanner from "@/assets/hero-banner.jpg";
 import { Truck, ShieldCheck, CreditCard, Headphones } from "lucide-react";
+import { useState, useEffect } from "react";
+import { productsApi } from "@/lib/api";
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  const flashDeals = products.filter((p) => p.oldPrice).slice(0, 6);
-  const popular = [...products].sort((a, b) => b.reviews - a.reviews).slice(0, 6);
+  const [userProducts, setUserProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Charger les produits depuis le backend
+    const loadProducts = async () => {
+      try {
+        const response = await productsApi.getProducts();
+        console.log('Products response:', response);
+        
+        // Vérifier si la réponse est un tableau ou un objet avec une propriété products
+        const products = Array.isArray(response) ? response : (response?.products || []);
+        
+        // Transformer les produits backend pour correspondre au format attendu
+        const transformedProducts = products.map((p: any) => ({
+          id: p._id,
+          name: p.name,
+          description: p.description,
+          price: p.finalPrice || p.sellerPrice,
+          oldPrice: p.sellerPrice !== p.finalPrice ? p.sellerPrice : undefined,
+          image: p.images && p.images.length > 0 ? p.images[0] : undefined,
+          category: p.category,
+          reviews: 0,
+          sellerId: p.sellerId
+        }));
+        
+        setUserProducts(transformedProducts);
+      } catch (error) {
+        console.error('Erreur lors du chargement des produits:', error);
+        // En cas d'erreur, utiliser localStorage comme fallback
+        const localProducts = JSON.parse(localStorage.getItem("kasuwa-user-products-v1") || "[]");
+        setUserProducts(localProducts);
+      }
+    };
+    
+    loadProducts();
+  }, []);
+
+  // Combiner les produits par défaut avec les produits utilisateurs
+  const allProducts = [...products, ...userProducts];
+  const flashDeals = allProducts.filter((p) => p.oldPrice).slice(0, 6);
+  const popular = [...allProducts].sort((a, b) => (b.reviews || 0) - (a.reviews || 0)).slice(0, 6);
 
   return (
     <div className="container mx-auto px-4 py-4 space-y-8">

@@ -10,22 +10,42 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as AddProductRouteImport } from './routes/add-product'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SellerDashboardRouteImport } from './routes/seller/dashboard'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as EditProductProductIdRouteImport } from './routes/edit-product.$productId'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
+import { Route as AccountEditRouteImport } from './routes/account.edit'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AddProductRoute = AddProductRouteImport.update({
+  id: '/add-product',
+  path: '/add-product',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -48,6 +68,11 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EditProductProductIdRoute = EditProductProductIdRouteImport.update({
+  id: '/edit-product/$productId',
+  path: '/edit-product/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
   id: '/category/$slug',
   path: '/category/$slug',
@@ -58,35 +83,55 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/admin/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountEditRoute = AccountEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => AccountRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/account': typeof AccountRoute
+  '/account': typeof AccountRouteWithChildren
+  '/add-product': typeof AddProductRoute
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/account/edit': typeof AccountEditRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/edit-product/$productId': typeof EditProductProductIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/dashboard': typeof SellerDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof AccountRoute
+  '/account': typeof AccountRouteWithChildren
+  '/add-product': typeof AddProductRoute
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/account/edit': typeof AccountEditRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/edit-product/$productId': typeof EditProductProductIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/dashboard': typeof SellerDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/account': typeof AccountRoute
+  '/account': typeof AccountRouteWithChildren
+  '/add-product': typeof AddProductRoute
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/account/edit': typeof AccountEditRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/category/$slug': typeof CategorySlugRoute
+  '/edit-product/$productId': typeof EditProductProductIdRoute
   '/product/$id': typeof ProductIdRoute
   '/seller/dashboard': typeof SellerDashboardRoute
 }
@@ -95,41 +140,60 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
+    | '/add-product'
     | '/cart'
+    | '/login'
+    | '/register'
     | '/search'
+    | '/account/edit'
     | '/admin/dashboard'
     | '/category/$slug'
+    | '/edit-product/$productId'
     | '/product/$id'
     | '/seller/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/account'
+    | '/add-product'
     | '/cart'
+    | '/login'
+    | '/register'
     | '/search'
+    | '/account/edit'
     | '/admin/dashboard'
     | '/category/$slug'
+    | '/edit-product/$productId'
     | '/product/$id'
     | '/seller/dashboard'
   id:
     | '__root__'
     | '/'
     | '/account'
+    | '/add-product'
     | '/cart'
+    | '/login'
+    | '/register'
     | '/search'
+    | '/account/edit'
     | '/admin/dashboard'
     | '/category/$slug'
+    | '/edit-product/$productId'
     | '/product/$id'
     | '/seller/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AccountRoute: typeof AccountRoute
+  AccountRoute: typeof AccountRouteWithChildren
+  AddProductRoute: typeof AddProductRoute
   CartRoute: typeof CartRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   CategorySlugRoute: typeof CategorySlugRoute
+  EditProductProductIdRoute: typeof EditProductProductIdRoute
   ProductIdRoute: typeof ProductIdRoute
   SellerDashboardRoute: typeof SellerDashboardRoute
 }
@@ -143,11 +207,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/add-product': {
+      id: '/add-product'
+      path: '/add-product'
+      fullPath: '/add-product'
+      preLoaderRoute: typeof AddProductRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -178,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/edit-product/$productId': {
+      id: '/edit-product/$productId'
+      path: '/edit-product/$productId'
+      fullPath: '/edit-product/$productId'
+      preLoaderRoute: typeof EditProductProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/category/$slug': {
       id: '/category/$slug'
       path: '/category/$slug'
@@ -192,16 +284,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/edit': {
+      id: '/account/edit'
+      path: '/edit'
+      fullPath: '/account/edit'
+      preLoaderRoute: typeof AccountEditRouteImport
+      parentRoute: typeof AccountRoute
+    }
   }
 }
 
+interface AccountRouteChildren {
+  AccountEditRoute: typeof AccountEditRoute
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountEditRoute: AccountEditRoute,
+}
+
+const AccountRouteWithChildren =
+  AccountRoute._addFileChildren(AccountRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AccountRoute: AccountRoute,
+  AccountRoute: AccountRouteWithChildren,
+  AddProductRoute: AddProductRoute,
   CartRoute: CartRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   CategorySlugRoute: CategorySlugRoute,
+  EditProductProductIdRoute: EditProductProductIdRoute,
   ProductIdRoute: ProductIdRoute,
   SellerDashboardRoute: SellerDashboardRoute,
 }

@@ -1,6 +1,7 @@
 import express from "express";
 import Product from "../models/Product.js";
 import { requireAuth, requireRole } from "../middleware/auth.js";
+import { upload } from "../utils/cloudinary.js";
 
 const router = express.Router();
 
@@ -18,10 +19,14 @@ router.get("/:id", async (req, res) => {
 });
 
 // create product (seller only)
-router.post("/", requireAuth, requireRole("seller"), async (req, res) => {
+router.post("/", requireAuth, requireRole("seller"), upload.array('images', 5), async (req, res) => {
   try {
     const sellerId = req.user._id;
-    const { name, description, sellerPrice, commission, stock, sku, images, category } = req.body;
+    const { name, description, sellerPrice, commission, stock, sku, category } = req.body;
+    
+    // Récupérer les URLs des images uploadées
+    const images = req.files ? req.files.map(file => file.path) : [];
+    
     const commissionPercent = commission ?? parseFloat(process.env.DEFAULT_COMMISSION_PERCENT || "15");
     const commissionAmount = (sellerPrice * commissionPercent) / 100;
     const finalPrice = sellerPrice + commissionAmount;
@@ -34,12 +39,21 @@ router.post("/", requireAuth, requireRole("seller"), async (req, res) => {
 });
 
 // update product (seller only)
-router.put("/:id", requireAuth, requireRole("seller"), async (req, res) => {
+router.put("/:id", requireAuth, requireRole("seller"), upload.array('images', 5), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ ok: false, message: "Not found" });
     if (product.sellerId.toString() !== req.user._id.toString()) return res.status(403).json({ ok: false, message: "Forbidden" });
+    
+    // Mettre à jour les champs
     Object.assign(product, req.body);
+    
+    // Ajouter les nouvelles images si uploadées
+    if (req.files && req.files.length > 0) {
+      const newImages = req.files.map(file => file.path);
+      product.images = [...product.images, ...newImages];
+    }
+    
     if (req.body.sellerPrice) {
       const commissionAmount = (product.sellerPrice * (product.commission || parseFloat(process.env.DEFAULT_COMMISSION_PERCENT || "15"))) / 100;
       product.finalPrice = product.sellerPrice + commissionAmount;

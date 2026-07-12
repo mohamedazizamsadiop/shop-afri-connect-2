@@ -35,7 +35,18 @@ router.post("/login", async (req, res) => {
     user.refreshTokens.push(refreshToken);
     await user.save();
 
-    res.json({ ok: true, accessToken, refreshToken });
+    res.json({ 
+      ok: true, 
+      accessToken, 
+      refreshToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        createdAt: user.createdAt
+      }
+    });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
   }

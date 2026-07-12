@@ -2,10 +2,12 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { categories } from "@/data/products";
 
 export function Header() {
   const { totalItems } = useCart();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -20,7 +22,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 bg-header text-header-foreground shadow-md">
       {/* Top promo bar */}
-      <div className="bg-accent text-accent-foreground text-xs py-1.5 text-center font-medium">
+      <div className="bg-accent text-black text-xs py-1.5 text-center font-medium">
         🚚 Livraison gratuite à Dakar dès 25 000 FCFA — Payez à la livraison disponible
       </div>
 
@@ -35,12 +37,11 @@ export function Header() {
           </button>
 
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-9 h-9 rounded-md bg-primary flex items-center justify-center font-black text-primary-foreground text-lg">
-              K
-            </div>
-            <span className="font-black text-xl tracking-tight hidden sm:block">
-              KASUWA<span className="text-primary">.</span>
-            </span>
+            <img 
+              src="/src/assets/diop-door.png" 
+              alt="Diop Door" 
+              className="h-20 w-auto"
+            />
           </Link>
 
           <form onSubmit={onSearch} className="flex-1 max-w-2xl mx-2">
@@ -63,9 +64,12 @@ export function Header() {
             </div>
           </form>
 
-          <Link to="/account" className="hidden md:flex items-center gap-1.5 hover:text-primary transition-colors text-sm font-medium">
+          <Link 
+            to={isAuthenticated ? "/account" : "/login"} 
+            className="hidden md:flex items-center gap-1.5 hover:text-primary transition-colors text-sm font-medium"
+          >
             <User className="w-5 h-5" />
-            <span>Compte</span>
+            <span>{isAuthenticated ? "Mon compte" : "Connexion"}</span>
           </Link>
 
           <Link
