@@ -3,14 +3,14 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package files
-COPY server/package*.json ./
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install --legacy-peer-deps
 
 # Copy application code
-COPY server/src ./src
-COPY server/tests ./tests
+COPY src ./src
+COPY tests ./tests
 
 # Set environment
 ENV NODE_ENV=production

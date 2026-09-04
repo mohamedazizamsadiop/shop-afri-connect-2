@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1788546420860",
+    "name": "testuser4",
+    "email": "testuser4@example.com",
+    "password": "$2a$10$JtGml5sb61YjAi542usrAe.xFjcw.BYyhCrOnhkTZvPSv2jfYh9Dy",
+    "role": "seller",
+    "refreshTokens": [
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3ODg1NDY0MjA4NjAiLCJpYXQiOjE3ODg1NDY0MjAsImV4cCI6MTc4OTE1MTIyMH0.auN5QRoJow31D4MDkexQpUFWhA-ElqN98WMFsTL5D4Q",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3ODg1NDY0MjA4NjAiLCJpYXQiOjE3ODg1NDY0NDEsImV4cCI6MTc4OTE1MTI0MX0.wzzFG3J3sx9c8j9HYdJQAIQS9ziTGuZ1_qRb0FMPW1M"
+    ],
+    "createdAt": "2026-09-04T18:27:00.860Z"
+  },
+  {
+    "id": "1788546479564",
+    "name": "joseph",
+    "email": "josephhenrinodichao@gmail.com",
+    "password": "$2a$10$9iQ8v9iHiUJtb.Uu1FLdouV2Nlrwbb60DKFTet.9XCcFBK7DENl7a",
+    "role": "seller",
+    "refreshTokens": [
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3ODg1NDY0Nzk1NjQiLCJpYXQiOjE3ODg1NDY0NzksImV4cCI6MTc4OTE1MTI3OX0.N6zK01quE05dzdA_LonJJyAfIufNDsxn1-xG2wLXCPw",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3ODg1NDY0Nzk1NjQiLCJpYXQiOjE3ODg1NDY0NzksImV4cCI6MTc4OTE1MTI3OX0.N6zK01quE05dzdA_LonJJyAfIufNDsxn1-xG2wLXCPw"
+    ],
+    "createdAt": "2026-09-04T18:27:59.564Z"
+  }
+]

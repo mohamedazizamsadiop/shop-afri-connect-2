@@ -29,7 +29,7 @@ const app = express();
 // En développement, on autorise l'origine demandée (utile pour IP/ports locaux).
 const allowedOrigins = process.env.FRONTEND_ORIGINS
   ? process.env.FRONTEND_ORIGINS.split(',')
-  : ['http://localhost:8080', 'http://192.168.1.114:8080', 'http://192.168.1.116:8080', 'http://192.168.1.187:8080'];
+  : ['http://localhost:8080', 'http://192.168.1.114:8080', 'http://192.168.1.116:8080', 'http://192.168.1.187:8080', 'http://192.168.1.41:8080'];
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'development' ? true : allowedOrigins,
