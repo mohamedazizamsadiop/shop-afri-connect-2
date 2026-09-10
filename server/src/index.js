@@ -41,15 +41,17 @@ app.use(express.json());
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/markethub";
 
-// Tenter la connexion MongoDB
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => {
-    console.error("MongoDB connection error:", err.message);
-    console.log("Server will continue running but database operations will fail");
-    console.log("Please ensure MongoDB is running or configure a valid MONGODB_URI");
-  });
+// Tenter la connexion MongoDB (seulement si pas en mode test)
+if (process.env.NODE_ENV !== "test") {
+  mongoose
+    .connect(MONGODB_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => {
+      console.error("MongoDB connection error:", err.message);
+      console.log("Server will continue running but database operations will fail");
+      console.log("Please ensure MongoDB is running or configure a valid MONGODB_URI");
+    });
+}
 
 app.use(express.json());
 app.use("/api/users", userRoutes);

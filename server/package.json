@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon --watch src --exec node src/index.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand"
+    "test": "NODE_ENV=test jest --runInBand --config=jest.config.js",
+    "lint": "echo 'Linting not configured'"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
