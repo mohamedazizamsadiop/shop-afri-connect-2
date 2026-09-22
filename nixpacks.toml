@@ -1,12 +1,12 @@
 [phases.setup]
-nixPkgs = ["nodejs-18_x"]
+nixPkgs = ["nodejs-22_x"]
 
 [phases.build]
-cmds = ["cd server && npm install --legacy-peer-deps", "cd ${ROOT} && npm install --legacy-peer-deps"]
+cmds = ["npm install --legacy-peer-deps", "npm run build"]
 
 [start]
-cmd = "cd server && npm start"
+cmd = "npm start"
 
 [variables]
-PORT = "4000"
+PORT = "3000"
 NODE_ENV = "production"

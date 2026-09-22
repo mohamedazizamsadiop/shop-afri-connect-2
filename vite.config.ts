@@ -8,6 +8,7 @@ export default defineConfig({
       entry: "server",
     },
   },
+
   nitro: isVercel
     ? {
         preset: "vercel",
