@@ -1,6 +1,5 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
-
-const isVercel = !!process.env.VERCEL;
+import { nitro } from "nitro/vite";
 
 export default defineConfig({
   tanstackStart: {
@@ -8,10 +7,11 @@ export default defineConfig({
       entry: "server",
     },
   },
-
-  nitro: isVercel
-    ? {
+  vite: {
+    plugins: [
+      nitro({
         preset: "vercel",
-      }
-    : true,
+      }),
+    ],
+  },
 });
