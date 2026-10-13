@@ -9,43 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as AddProductRouteImport } from './routes/add-product'
-import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SellerDashboardRouteImport } from './routes/seller/dashboard'
-import { Route as ProductIdRouteImport } from './routes/product.$id'
-import { Route as EditProductProductIdRouteImport } from './routes/edit-product.$productId'
-import { Route as CategorySlugRouteImport } from './routes/category.$slug'
-import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AddProductRouteImport } from './routes/add-product'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as AccountEditRouteImport } from './routes/account.edit'
+import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
+import { Route as CategorySlugRouteImport } from './routes/category.$slug'
+import { Route as EditProductProductIdRouteImport } from './routes/edit-product.$productId'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as SellerDashboardRouteImport } from './routes/seller/dashboard'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AddProductRoute = AddProductRouteImport.update({
-  id: '/add-product',
-  path: '/add-product',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -53,24 +33,39 @@ const AccountRoute = AccountRouteImport.update({
   path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AddProductRoute = AddProductRouteImport.update({
+  id: '/add-product',
+  path: '/add-product',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SellerDashboardRoute = SellerDashboardRouteImport.update({
-  id: '/seller/dashboard',
-  path: '/seller/dashboard',
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProductIdRoute = ProductIdRouteImport.update({
-  id: '/product/$id',
-  path: '/product/$id',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EditProductProductIdRoute = EditProductProductIdRouteImport.update({
-  id: '/edit-product/$productId',
-  path: '/edit-product/$productId',
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountEditRoute = AccountEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/admin/dashboard',
+  path: '/admin/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
@@ -78,15 +73,20 @@ const CategorySlugRoute = CategorySlugRouteImport.update({
   path: '/category/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminDashboardRoute = AdminDashboardRouteImport.update({
-  id: '/admin/dashboard',
-  path: '/admin/dashboard',
+const EditProductProductIdRoute = EditProductProductIdRouteImport.update({
+  id: '/edit-product/$productId',
+  path: '/edit-product/$productId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountEditRoute = AccountEditRouteImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => AccountRoute,
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SellerDashboardRoute = SellerDashboardRouteImport.update({
+  id: '/seller/dashboard',
+  path: '/seller/dashboard',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -200,39 +200,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/add-product': {
-      id: '/add-product'
-      path: '/add-product'
-      fullPath: '/add-product'
-      preLoaderRoute: typeof AddProductRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -242,32 +214,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/add-product': {
+      id: '/add-product'
+      path: '/add-product'
+      fullPath: '/add-product'
+      preLoaderRoute: typeof AddProductRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/seller/dashboard': {
-      id: '/seller/dashboard'
-      path: '/seller/dashboard'
-      fullPath: '/seller/dashboard'
-      preLoaderRoute: typeof SellerDashboardRouteImport
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/product/$id': {
-      id: '/product/$id'
-      path: '/product/$id'
-      fullPath: '/product/$id'
-      preLoaderRoute: typeof ProductIdRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/edit-product/$productId': {
-      id: '/edit-product/$productId'
-      path: '/edit-product/$productId'
-      fullPath: '/edit-product/$productId'
-      preLoaderRoute: typeof EditProductProductIdRouteImport
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account/edit': {
+      id: '/account/edit'
+      path: '/edit'
+      fullPath: '/account/edit'
+      preLoaderRoute: typeof AccountEditRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/category/$slug': {
@@ -277,19 +270,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategorySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/dashboard': {
-      id: '/admin/dashboard'
-      path: '/admin/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminDashboardRouteImport
+    '/edit-product/$productId': {
+      id: '/edit-product/$productId'
+      path: '/edit-product/$productId'
+      fullPath: '/edit-product/$productId'
+      preLoaderRoute: typeof EditProductProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/account/edit': {
-      id: '/account/edit'
-      path: '/edit'
-      fullPath: '/account/edit'
-      preLoaderRoute: typeof AccountEditRouteImport
-      parentRoute: typeof AccountRoute
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/seller/dashboard': {
+      id: '/seller/dashboard'
+      path: '/seller/dashboard'
+      fullPath: '/seller/dashboard'
+      preLoaderRoute: typeof SellerDashboardRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
