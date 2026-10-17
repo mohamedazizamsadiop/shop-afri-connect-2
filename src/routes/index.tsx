@@ -88,7 +88,10 @@ function Home() {
       </section>
 
       {/* Trust bar */}
-      <section className="relative rounded-xl overflow-hidden bg-gradient-to-r from-[#002550] to-[#0a4aa6] text-white">
+      <section
+        className="relative rounded-xl overflow-hidden text-white"
+        style={{ background: "linear-gradient(90deg, #002550, #0a4aa6)" }}
+      >
         {[
           { icon: Truck, title: "Livraison rapide", sub: "Partout au Sénégal" },
           { icon: CreditCard, title: "Paiement mobile", sub: "Wave, Orange Money" },
@@ -156,3 +159,4 @@ function Home() {
     </div>
   );
 }
+
