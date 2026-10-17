@@ -88,7 +88,7 @@ function Home() {
       </section>
 
       {/* Trust bar */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <section className="relative rounded-xl overflow-hidden bg-gradient-to-r from-[#002550] to-[#0a4aa6] text-white">
         {[
           { icon: Truck, title: "Livraison rapide", sub: "Partout au Sénégal" },
           { icon: CreditCard, title: "Paiement mobile", sub: "Wave, Orange Money" },
