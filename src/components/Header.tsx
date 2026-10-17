@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { categories } from "@/data/products";
+import logo from "@/assets/diop-door.png";
 
 export function Header() {
   const { totalItems } = useCart();
@@ -37,9 +38,9 @@ export function Header() {
           </button>
 
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <img 
-              src="/src/assets/diop-door.png" 
-              alt="Diop Door" 
+            <img
+              src={logo}
+              alt="Diop Door"
               className="h-20 w-auto"
             />
           </Link>
