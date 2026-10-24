@@ -58,7 +58,7 @@ jobs:
 
       - name: Check for build errors
         run: |
-          if [ -d "dist" ]; then
+          if [ -d ".vercel/output" ]; then
             echo "✅ Frontend built successfully"
           else
             echo "❌ Build failed"
